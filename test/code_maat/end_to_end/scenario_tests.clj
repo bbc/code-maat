@@ -104,7 +104,7 @@
    [p4-log-file (p4-options "communication")]
    [hg-log-file (hg-options "communication")]]
   (is (= (run-with-str-output log-file options)
-         "author,peer,shared,average,strength\nXYZ,APT,1,2,50\nAPT,XYZ,1,2,50\n")))
+         "author,peer,shared,author-commits,strength\nXYZ,APT,1,1,100\nAPT,XYZ,1,2,50\n")))
 
 ;;; The identity analysis is intended as a debug aid or to
 ;;; generate parsed VCS data as input to other tools.
@@ -186,7 +186,7 @@
    [empty-p4-file (p4-options "communication")]
    [empty-hg-file (hg-options "communication")]]
   (is (= (run-with-str-output log-file options)
-         "author,peer,shared,average,strength\n")))
+         "author,peer,shared,author-commits,strength\n")))
 
 (def-data-driven-with-vcs-test analysis-of-code-age-with-empty-log
   [[empty-log-file (svn-csv-options "age")]

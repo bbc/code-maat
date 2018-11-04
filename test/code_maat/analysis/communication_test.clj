@@ -19,10 +19,10 @@
 
 (deftest calculates-communication-needs-for-shared-authorship
   (is (= (communication/by-shared-entities sharing-authors options)
-         (ds/-dataset [:author :peer :shared :average :strength]
+         (ds/-dataset [:author :peer :shared :author-commits :strength]
                       [["jt" "at" 2 2 100 ]
-                       ["at" "jt" 2 2 100 ]
                        ["jt" "ap" 1 2  50]
+                       ["at" "jt" 2 2 100 ]
                        ["at" "ap" 1 2  50]
-                       ["ap" "jt" 1 2  50]
-                       ["ap" "at" 1 2  50]]))))
+                       ["ap" "jt" 1 1  100]
+                       ["ap" "at" 1 1  100]]))))

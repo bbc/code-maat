@@ -34,7 +34,7 @@
 ;;; give us a fast way to look-up the total number of
 ;;; commits for an author.
 
-(defn- authorship-combos 
+(defn- authorship-combos
   [authors]
   (combo/selections authors 2))
 
@@ -78,18 +78,18 @@
        :let [[me peer] pair
              my-commits (commits-of me freqs)
              peer-commits (commits-of peer freqs)
-             average-commits (math/ceil
-                              (m/average my-commits peer-commits))
-             strength (strength-from shared-commits average-commits)]
+             ;average-commits (math/ceil
+             ;                  (m/average my-commits peer-commits))
+             strength-to-me (strength-from shared-commits my-commits)]
        :when (not (= me peer))]
-    [me peer shared-commits average-commits strength]))
+    [me peer shared-commits my-commits strength-to-me]))
 
 (defn by-shared-entities
   "Caclulates the communication needs as based upon
    shared work by the authors on different entities.
    Returns a dataset containing pairs of all permutations
    of authors with a (heuristic) communication strength
-   value for each pair." 
+   value for each pair."
   [ds options]
   (->>
    (effort/as-revisions-per-author ds options)
@@ -97,6 +97,5 @@
    author-pairs-for-entities
    by-shared-work-frequency
    with-commit-stats
-   (ds/-dataset [:author :peer :shared :average :strength])
-   (ds/-order-by [:strength :author] :desc)))
-
+   (ds/-dataset [:author :peer :shared :author-commits :strength])
+   (ds/-order-by [:author :strength] :desc)))
