@@ -16,15 +16,16 @@
 ;;;
 ;;; Input: a log file generated with the following command:
 ;;;         
-;;;    git log --all -M -C --numstat --date=short --pretty=format:'--%h--%cd--%cn'
+;;;    git log --all -M -C --numstat --date=short --pretty=format:'--%h--%cd--%aN--%cN'
 ;;;
 ;;; Ouput: A sequence of maps where each map represents a change entry
 ;;;        from the version-control log:
-;;;   :entity :date :author :rev
+;;;   :entity :date :author :committer :rev
 ;;; where
 ;;;  :entity -> the changed entity as a string
 ;;;  :date -> commit date as a string
 ;;;  :author -> as a string
+;;;  :committer -> as a string
 ;;;  :rev -> the hash used by git to identify the commit
 
 ;;; Sample input where each commit is separated by a whitespace:
@@ -42,9 +43,10 @@
    That info is added b the numstat argument."
   "
     entry     = <prelude*> prelude changes (* covers pull requests *)
-    <prelude> = <separator> rev <separator> date <separator> author <nl>
+    <prelude> = <separator> rev <separator> date <separator> author <separator> committer <nl>
     rev       =  #'[\\da-f]+'
-    author    =  #'[^\\n]*'
+    author    =  #'[^\\n]*(?=--)'
+    committer =  #'[^\\n]*'
     date      =  #'\\d{4}-\\d{2}-\\d{2}'
     changes   =  change*
     change    =  added <tab> deleted <tab> file <nl>
@@ -64,7 +66,8 @@
   {:rev #(get-in % [1 1])
    :date #(as-common-time-format (get-in % [2 1]))
    :author #(get-in % [3 1])
-   :changes #(rest (get-in % [4]))
+   :committer #(get-in % [4 1])
+   :changes #(rest (get-in % [5]))
    :message (fn [_] "-")}) ; NOTE: use the git legacy parser to extract commit messages
 
 (defn parse-log

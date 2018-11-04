@@ -10,8 +10,9 @@
        (into {})))
 
 (defn- author->team
-  [team-lookup {:keys [author] :as commit}]
-  (assoc commit :author (get team-lookup author author)))
+  [team-lookup {:keys [author committer] :as commit}]
+  (assoc commit :author (get team-lookup author author) 
+                :committer (get team-lookup committer committer)))
 
 (defn run
   "Maps individual authors to teams as defined by team-lookup,

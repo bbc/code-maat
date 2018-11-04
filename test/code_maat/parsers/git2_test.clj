@@ -8,23 +8,23 @@
   (:use clojure.test incanter.core))
 
 (def ^:const entry
-  "--990442e--2013-08-29--Adam Petersen
+  "--990442e--2013-08-29--Adam Petersen--Bob Smith
 1	0	project.clj
 2	4	src/code_maat/parsers/git.clj
 ")
 
 (def ^:const binary-entry
-  "--990442e--2013-11-10--Adam Petersen
+  "--990442e--2013-11-10--Adam Petersen--Bob Smith
 -	-	project.bin
 2	40	src/code_maat/parsers/git.clj
 ")
 
 (def ^:const entries
-  "--b777738--2013-08-29--Adam Petersen
+  "--b777738--2013-08-29--Adam Petersen--Bob Smith
 10	9	src/code_maat/parsers/git.clj
 32	0	test/code_maat/parsers/git_test.clj
 
---a527b79--2013-08-29--Adam Petersen
+--a527b79--2013-08-29--Adam Petersen--Bob Smith
 6	2	src/code_maat/parsers/git.clj
 0	7	test/code_maat/end_to_end/scenario_tests.clj
 18	0	test/code_maat/end_to_end/simple_git.txt
@@ -32,8 +32,8 @@
 ")
 
 (def ^:const pull-requests
-  "--0d3de0c--2013-01-04--Mr X
---77c8751--2013-01-04--Mr Y
+  "--0d3de0c--2013-01-04--Mr X--Bob Smith
+--77c8751--2013-01-04--Mr Y--Bob Smith
 1	1	build.xml
 1	1	project/Versions.scala
 ")
@@ -47,6 +47,7 @@
          [{:loc-deleted "0"
            :loc-added "1"
            :author "Adam Petersen"
+           :committer "Bob Smith"
            :rev "990442e"
            :date "2013-08-29"
            :entity "project.clj"
@@ -54,6 +55,7 @@
           {:loc-deleted "4"
            :loc-added "2"
            :author "Adam Petersen"
+           :committer "Bob Smith"
            :rev "990442e"
            :date "2013-08-29"
            :entity "src/code_maat/parsers/git.clj"
@@ -65,12 +67,14 @@
          [{:loc-deleted "-"
            :loc-added "-"
            :author "Adam Petersen"
+           :committer "Bob Smith"
            :rev "990442e"
            :date "2013-11-10"
            :entity "project.bin"
            :message "-"}
           {:loc-deleted "40"
            :loc-added "2"
+           :committer "Bob Smith"
            :author "Adam Petersen"
            :rev "990442e"
            :date "2013-11-10"
@@ -80,27 +84,33 @@
 (deftest parses-multiple-entries-to-dataset
   (is (= (parse entries)
          [{:loc-deleted "9" :loc-added "10"
-           :author "Adam Petersen" :rev "b777738" :date "2013-08-29"
+           :author "Adam Petersen" :committer "Bob Smith"
+           :rev "b777738" :date "2013-08-29"
            :entity "src/code_maat/parsers/git.clj"
            :message "-"}
           {:loc-deleted "0" :loc-added "32"
-           :author "Adam Petersen" :rev "b777738" :date "2013-08-29"
+           :author "Adam Petersen" :committer "Bob Smith"
+           :rev "b777738" :date "2013-08-29"
            :entity "test/code_maat/parsers/git_test.clj"
            :message "-"}
           {:loc-deleted "2" :loc-added "6"
-           :author "Adam Petersen" :rev "a527b79" :date "2013-08-29"
+           :author "Adam Petersen" :committer "Bob Smith"
+           :rev "a527b79" :date "2013-08-29"
            :entity "src/code_maat/parsers/git.clj"
            :message "-"}
           {:loc-deleted "7" :loc-added "0"
-           :author "Adam Petersen" :rev "a527b79" :date "2013-08-29"
+           :author "Adam Petersen" :committer "Bob Smith"
+           :rev "a527b79" :date "2013-08-29"
            :entity "test/code_maat/end_to_end/scenario_tests.clj"
            :message "-"}
           {:loc-deleted "0" :loc-added "18",
-           :author "Adam Petersen" :rev "a527b79" :date "2013-08-29"
+           :author "Adam Petersen" :committer "Bob Smith"
+           :rev "a527b79" :date "2013-08-29"
            :entity "test/code_maat/end_to_end/simple_git.txt"
            :message "-"}
           {:loc-deleted "0" :loc-added "21"
-           :author "Adam Petersen" :rev "a527b79" :date "2013-08-29"
+           :author "Adam Petersen" :committer "Bob Smith"
+           :rev "a527b79" :date "2013-08-29"
            :entity "test/code_maat/end_to_end/svn_live_data_test.clj"
            :message "-"}])))
 
@@ -115,6 +125,7 @@
   (is (= (parse pull-requests)
          [{:loc-deleted "1"
            :loc-added "1"
+           :committer "Bob Smith"
            :author "Mr Y"
            :rev "77c8751"
            :date "2013-01-04"
@@ -122,6 +133,7 @@
            :message "-"}
           {:loc-deleted "1"
            :loc-added "1"
+           :committer "Bob Smith"
            :author "Mr Y"
            :rev "77c8751"
            :date "2013-01-04"

@@ -99,8 +99,9 @@
   (map file-stats (changes z)))
 
 (defn- make-row-constructor
-  [{:keys [author rev date message]} v]
+  [{:keys [author committer rev date message] :or { committer (constantly nil) }} v]
   (let [author-value (author v)
+        committer-value (committer v)
         rev-value (rev v)
         date-value (date v)
         message-value (message v)]
@@ -110,11 +111,10 @@
                         :date date-value
                         :entity name
                         :message message-value}
-            optional {:loc-added added
-                      :loc-deleted deleted}]
-        (if (and added deleted)
-          (merge mandatory optional)
-          mandatory)))))
+            optional (into {} (filter #(some? (second %)) { :committer committer-value 
+                                                            :loc-added added 
+                                                            :loc-deleted deleted }))]
+        (merge mandatory optional)))))
 
 (defn- entry-as-row
   "Transforms one entry (as a hiccup formated vector) into
